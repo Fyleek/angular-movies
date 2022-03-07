@@ -10,7 +10,7 @@ export class MovieDetail {
   backdrop_path!: string
   belongs_to_collection!: BelongsToCollection
   budget!: number
-  genre!: KindIds[]
+  genres!: KindIds[]
   homepage!: string
   id!: number
   imdb_id!: string
@@ -31,5 +31,5 @@ export class MovieDetail {
   video!: boolean
   vote_average!: number
   vote_count!: number
-  comments!: Comments
+  comments!: Comments[]
 }

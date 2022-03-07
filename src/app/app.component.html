@@ -1,55 +1,166 @@
 <mat-toolbar class="mat-elevation-z8">
-  <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
+  <div fxFlex="50">
+    Éval Angular M1 CP IL
+  </div>
+  <div fxFlex="50" fxLayoutAlign="end">
+    <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()" [disabled]="disableMenu">
       <mat-icon *ngIf="!sidenav.opened">
-          menu <!-- TODO : Block sidenav if MovieDetail is open -->
+          menu
       </mat-icon>
       <mat-icon *ngIf="sidenav.opened">
           close
       </mat-icon>
-  </button>
-  Éval Angular M1 CP IL <!-- TODO : Add comeback link to home page + add icon for toolbar -->
-  <!-- TODO : Add links to my github + linkedin -->
-  <!-- TODO : Add easter egg to the project -->
+    </button>
+  </div>
 </mat-toolbar>
 
 <mat-sidenav-container>
   <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8">
-    
     <mat-divider></mat-divider>
-
-    <button mat-button class="menu-button">
-        <mat-icon>home</mat-icon> <!-- TODO : Change each icon to corresponding icon -->
-        <span>Action</span>
+    <button mat-button class="menu-button" *ngFor="let genre of genres;" (click)="getMoviesByGenre(genre.id)">
+      <mat-icon>{{genre.icon}}</mat-icon>
+      <span>{{genre.name}}</span>
     </button>
-    <button mat-button class="menu-button">
-        <mat-icon>person</mat-icon>
-        <span>Adventure</span>
-    </button>
-    <button mat-button class="menu-button">
-        <mat-icon>info</mat-icon>
-        <span>Animation</span>
-    </button>
-    <button mat-button class="menu-button">
-      <mat-icon>info</mat-icon>
-      <span>Comedy</span>
-  </button>
-  <button mat-button class="menu-button">
-    <mat-icon>info</mat-icon>
-    <span>Crime</span>
-  </button>
-  <button mat-button class="menu-button">
-    <mat-icon>info</mat-icon>
-    <span>Documentary</span>
-  </button>
-  <button mat-button class="menu-button">
-    <mat-icon>info</mat-icon>
-    <span>Drama</span>
-  </button>
-
     <mat-divider></mat-divider>
-
   </mat-sidenav>
   <mat-sidenav-content>
-    <app-movies></app-movies>
+    <div class="content">
+      <div fxLayout="row wrap" fxLayoutGap="16px grid" style="padding-left: 10px; padding-right: 10px; padding-top: 10px;" *ngIf="!detailsInformation">
+        <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let movie of movies">
+          <mat-card class="mat-elevation-z4" >
+            <mat-card-header>
+              <mat-card-title>{{movie.title}}</mat-card-title>
+            </mat-card-header>
+            <img mat-card-image [src]="movie.poster_path">
+            <mat-card-content>
+              <p>Release Date : {{movie.release_date}}</p>
+              <p>Resume : {{movie.overview}}</p>
+              <p fxLayoutAlign="end center"><span class="aligned-with-icon-relative">{{movie.vote_average}}</span><mat-icon class="grade-icon">grade</mat-icon>({{movie.vote_count}})</p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button (click)="getMoreInformation(movie.id)">More information</button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+      <div fxLayout="row" *ngIf="detailsInformation">
+        <div fxFlex="30">
+          <img mat-card class="detail-image" [src]="movieDetails.poster_path">
+        </div>
+        <div fxFlex="70" style="padding-top: 10px; padding-right: 10px;">
+          <mat-card>
+            <mat-card-title-group>
+              <mat-card-title>{{movieDetails.title}}</mat-card-title>
+              <mat-card-subtitle><p fxLayoutAlign="start center">{{movieDetails.release_date}}</p><p fxLayoutAlign="end center"><span class="aligned-with-icon-relative">{{movieDetails.vote_average}}</span><mat-icon class="grade-icon">grade</mat-icon>({{movieDetails.vote_count}})</p></mat-card-subtitle> <!-- TODO: Add all data needed into the car -->
+            </mat-card-title-group>
+            <mat-card-content>
+              <mat-grid-list cols="4" rowHeight="100px">
+                <mat-grid-tile
+                  colspan="3"
+                  rowspan="1">
+                  {{movieDetails.overview}}
+                </mat-grid-tile>
+                <mat-grid-tile
+                  colspan="1"
+                  rowspan="2">
+                  <mat-card-title>Genres :</mat-card-title>
+                  <ul>
+                    <li *ngFor="let genre of movieDetails.genres">
+                      {{genre.name}}
+                    </li>
+                  </ul>
+                </mat-grid-tile>
+                <mat-grid-tile
+                  colspan="1"
+                  rowspan="1">
+                  <mat-card-title>Spoken languages :</mat-card-title>
+                  <ul>
+                    <li *ngFor="let language of movieDetails.spoken_languages">
+                      {{language.english_name}}
+                    </li>
+                  </ul>
+                </mat-grid-tile>
+                <mat-grid-tile
+                  colspan="2"
+                  rowspan="1">
+                  <mat-card-title>Production Companies :</mat-card-title>
+                  <ul>
+                    <li *ngFor="let companie of movieDetails.production_companies">
+                      {{companie.name}} | {{companie.origin_country}}
+                    </li>
+                  </ul>
+                </mat-grid-tile>
+                <mat-grid-tile
+                  colspan="1"
+                  rowspan="3"
+                  *ngIf="movieDetails.belongs_to_collection">
+                  <img mat-card-image [src]="movieDetails.belongs_to_collection.poster_path" class="collection-img">
+                </mat-grid-tile>
+                <mat-grid-tile
+                  colspan="3"
+                  rowspan="2"
+                  *ngIf="movieDetails.belongs_to_collection">
+                  <mat-card-title>Collection :</mat-card-title>
+                  <ul>
+                    <li>
+                      {{movieDetails.belongs_to_collection.name}}
+                    </li>
+                  </ul>
+                </mat-grid-tile>
+              </mat-grid-list>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button (click)="detailsInformation = false; disableMenu = false;">All Movies</button>
+            </mat-card-actions>
+          </mat-card>
+          <mat-card class="comment-card">
+            <mat-card-title-group>
+              <mat-card-title>
+                Comments
+              </mat-card-title>
+            </mat-card-title-group>
+            <mat-card-content>
+              <div>
+                <mat-grid-list cols="2" rowHeight="100px">
+                  <mat-grid-tile colspan="1">
+                    <mat-form-field class="full-width-form" appearance="fill">
+                      <mat-label>Opinion</mat-label>
+                      <textarea matInput #opinion placeholder="Ex. Good Movie"></textarea>
+                    </mat-form-field>
+                  </mat-grid-tile>
+                  <mat-grid-tile colspan="1">
+                    <mat-form-field class="full-width-form" appearance="fill">
+                      <mat-label>Grade</mat-label>
+                      <input matInput #grade maxlength="2" placeholder="Ex. 7">
+                    </mat-form-field>
+                  </mat-grid-tile>
+                </mat-grid-list>
+              </div>
+              <mat-card-actions>
+                <button mat-button (click)="sendComment(grade.value, opinion.value, movieDetails.id)">Send comment</button>
+              </mat-card-actions>
+              <mat-divider></mat-divider>
+              <div *ngIf="movieDetails.comments.length > 0">
+                <mat-grid-list cols="4" rowHeight="100px" *ngFor="let comment of movieDetails.comments">
+                  <mat-grid-tile
+                    colspan="3"
+                    rowspan="1">
+                    {{comment.text}}
+                  </mat-grid-tile>
+                  <mat-grid-tile
+                    colspan="1"
+                    rowspan="1">
+                    {{comment.rating}}/10
+                    <mat-icon class="grade-icon">grade</mat-icon>
+                  </mat-grid-tile>
+                  <mat-divider></mat-divider>
+                </mat-grid-list>
+              </div>
+              <div *ngIf="movieDetails.comments.length === 0">No comment available</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

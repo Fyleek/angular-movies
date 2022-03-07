@@ -13,11 +13,15 @@ export class MovieDataService{
 
   constructor(private _http: HttpClient) {}
 
-  public getMovie(): Observable<any> { // TODO: Check if possible how to change de the <any> to <Movie>
-    return this._http.get(this.baseUrl + MOVIE_URLS.MOVIE_DETAIL_URL);
+  public getMovie(): Observable<Movie[]> {
+    return this._http.get<Movie[]>(this.baseUrl + MOVIE_URLS.MOVIE_DETAIL_URL);
   }
 
-  public getDetails(id: number): Observable<any> { // TODO: Check if possible how to change de the <any> to <MovieDetail>
-    return this._http.get(this.baseUrl + MOVIE_URLS.MOVIE_DETAIL_URL + id);
+  public getDetails(id: number): Observable<MovieDetail> {
+    return this._http.get<MovieDetail>(this.baseUrl + MOVIE_URLS.MOVIE_DETAIL_URL + id);
   }
-} // TODO: Add method to post data when comment is send
+
+  public sendComment(rating: string, text: string, id: number): Observable<any> {
+    return this._http.post<any>(this.baseUrl + MOVIE_URLS.MOVIE_DETAIL_URL + id + MOVIE_URLS.MOVIE_COMMENT_URL, {rating : rating, text: text});
+  }
+}

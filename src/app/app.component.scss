@@ -6,7 +6,6 @@ mat-toolbar {
 mat-sidenav {
   margin: 16px;
   width: 200px;
-  border-right: none;
   background: #002b5c;
   color: white;
   border-radius: 10px;
@@ -34,4 +33,41 @@ mat-divider {
   margin-top: 16px;
   margin-bottom: 16px;
   background-color: rgba(255, 255, 255, 0.5);
+}
+
+.logo{
+  height: 10%;
+}
+
+.img {
+  width: 100%;
+  margin-bottom: 18%;
+}
+.container {
+  min-height: 100%;
+  width: 100%;
+}
+.card-picture {
+  width: 23%;
+  margin-bottom: 2%;
+}
+
+.search-form {
+  width: 90%;
+}
+
+.grade-icon {
+  color: goldenrod;
+}
+
+.collection-img {
+  width: 70%;
+}
+
+.comment-card {
+  margin-top: 10px;
+}
+
+.full-width-form {
+  width: 90%;
 }
